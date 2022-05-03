@@ -24,10 +24,10 @@ router.get('/home', (req, res) => {
 
 router.post('/register', async (req, res) => {
 
-  const {username,email,DOB,usertype,password,cpassword } =req.body;
-
-    if(!username || !email || !DOB || !usertype || !password || !cpassword){
-
+  const {firstName,lastName,email,password,cpassword } =req.body;
+    console.log(req.body);
+    if(!firstName || !lastName || !email|| !password || !cpassword){
+      console.log("error comes here");
       return res.status(421).json({error: "please fill the field properly"});
     }
   
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
 
       }else{
 
-        const user = new User({username,email,DOB,usertype,password,cpassword});
+        const user = new User({firstName,lastName,email,password,cpassword});
 
         await user.save()
         console.log(user.email);

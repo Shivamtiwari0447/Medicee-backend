@@ -2,15 +2,16 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+var cors = require('cors')
 
 dotenv.config({path:'./config.env'});
-
+app.use(cors())
 app.use(express.json());
 
 require('./database/connect');
-// const User = require('./models/registerSchema');
+const User = require('./models/registerSchema');
 const PORT = process.env.PORT;
-// var routerPath = require('./router/auth');
+var routerPath = require('./router/auth');
 app.use(require('./router/auth'));
 
 
@@ -37,6 +38,6 @@ app.get('/about', middleware,(req, res) => {
 })
 
 
-app.listen(PORT, ()=>{
-  console.log(`app is listening to port ${PORT}`);
+app.listen(3000, ()=>{
+  console.log(`app is listening to port 3000`);
 })
