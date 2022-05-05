@@ -90,7 +90,7 @@ router.post('/signin' , async (req,res) =>{
 
       if (!email || !password){
         
-        return res.status(400).json({error: "please fill the email field "});
+        return res.status(400).json({error: "please fill the email field ",status:400});
       }
 
       const userLoginMail = await User.findOne({email:email});
@@ -109,20 +109,21 @@ router.post('/signin' , async (req,res) =>{
 
         if(!isMatch){
 
-          res.status(400).json({error:"Invalid password"});
+          return res.status(400).json({error:"Invalid password",status:400});
 
           }else{
-            res.status(401).json({message:"user signin successfully"});
+           return res.status(401).json({message:"user signin successfully ",status:401,userLoginMail});
           }
 
     }else{
-      res.json({message:"Invalid email or  user doesn't exist"});
+      res.status(400).json({message:"Invalid email or  user doesn't exist",status:400});
     }
 
-        
+    
       
 
-  } catch(err) {
+  }
+   catch(err) {
       console.log(err);
   }
 

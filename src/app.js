@@ -2,11 +2,13 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-var cors = require('cors')
+var cors = require('cors');
+const bodyParser = require("body-parser");
 
 dotenv.config({path:'./config.env'});
-app.use(cors())
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
+// app.use(express.json());
 
 require('./database/connect');
 const User = require('./models/registerSchema');
