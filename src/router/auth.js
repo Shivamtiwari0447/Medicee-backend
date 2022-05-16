@@ -243,8 +243,10 @@ router.post('/bookappointment', async (req, res) => {
 
 });
 
-router.get('/showappointment', async (req, res) => {
-  const allappointment = await Appointment.find();
+router.get('/showappointment/:email', async (req, res) => {
+  const id=req.params.email;
+  console.log(id);
+  const allappointment = await Appointment.find({email:id});
   console.log(allappointment);
   if (allappointment) {
     res.send(allappointment);
