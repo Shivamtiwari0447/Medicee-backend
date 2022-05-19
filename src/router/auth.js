@@ -186,6 +186,16 @@ router.post('/reset-password', async (req, res) => {
   })
 })
 
+//-----------------------show registered user--------------------------------//
+router.get('/getalluserdetails', async (req, res) => {
+  const users = await User.find();
+  
+  if (users) {
+    res.send(users);
+  } else
+    res.send("user is not available ")
+});
+
 // ----------------------------BookAppointMent ---------------------------- //
 
 router.post('/bookappointment', async (req, res) => {
@@ -245,15 +255,27 @@ router.post('/bookappointment', async (req, res) => {
 
 router.get('/showappointment/:email', async (req, res) => {
   const id=req.params.email;
-  console.log(id);
+  
   const allappointment = await Appointment.find({email:id});
-  console.log(allappointment);
+ 
   if (allappointment) {
     res.send(allappointment);
     // res.status(500).json({ message: "we have appointment" });
   } else
     res.send("Appointdetails is empty")
 });
+router.get('/showallappointment', async (req, res) => {
+  const id=req.params.email;
+  
+  const allappointment = await Appointment.find();
+ 
+  if (allappointment) {
+    res.send(allappointment);
+    // res.status(500).json({ message: "we have appointment" });
+  } else
+    res.send("Appointdetails is empty")
+});
+
 
 // ----------------------------Get Hospital Detail ---------------------------- //
 router.get('/gethspdetails', async (req, res) => {
@@ -263,6 +285,15 @@ router.get('/gethspdetails', async (req, res) => {
     res.status(500).json({ message: "blood is available" });
   } else
     res.send("blood is not available ")
+});
+
+router.get('/getallhspdetails', async (req, res) => {
+  const hospital = await Hospital.find();
+  
+  if (hospital) {
+    res.send(hospital);
+  } else
+    res.send("hospital is not available ")
 });
 
 router.post('/postdetails', (req, res) => {
