@@ -1,21 +1,42 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
+
 const hospitaltable = new mongoose.Schema({
-    hspname: {
+    statename: {
+        type:String,
+        required:true
+    },
+    cityname: {
+        type:String,
+        required:true
+    },
+    locality: {
+        type:String,
+        required:true
+    },
+    hospitalname: {
         type:String,
         required:true
     },
     hspblood: {
-        type:String,
-        required:true
-    },
-    hspdoctor: {
-        type:String,
+        type:Number,
         required:true
     },
     hspoxygen: {
-        type:String,
+        type:Number,
+        required:true
+    },
+    hspbed: {
+        type:Number,
+        required:true
+    },
+    hspdoctor: {
+        type:[String],
+        required:true
+    },
+    hspservices: {
+        type:[String],
         required:true
     },
     resetToken:String,

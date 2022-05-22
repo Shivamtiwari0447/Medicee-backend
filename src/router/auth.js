@@ -201,7 +201,7 @@ router.get('/getalluserdetails', async (req, res) => {
 router.post('/bookappointment', async (req, res) => {
 
   const { hspname, doctorsname, date, address, email } = req.body;
-  console.log(req.body);
+
   if (!date || !doctorsname || !address || !hspname ||!email) {
     console.log("error comes here");
     return res.status(421).json({ error: "please fill the field properly" });
@@ -209,7 +209,7 @@ router.post('/bookappointment', async (req, res) => {
 
   try {
 
-    const userExist = await Appointment.findOne({ date: date });
+    const userExist = await Appointment.findOne({ doctorsname:doctorsname, date: date });
 
     if (userExist) {
       return res.status(422).json({ error: "already booked on this date" });
@@ -296,8 +296,43 @@ router.get('/getallhspdetails', async (req, res) => {
     res.send("hospital is not available ")
 });
 
-router.post('/postdetails', (req, res) => {
-  res.send("updating hospital detail")
+router.post('/postdetails', async(req, res) => {
+  
+  const {statename,cityname,locality,hospitalname,hspblood,hspoxygen,hspbed,hspdoctor,hspservices}=req.body;
+  
+  if (!statename || !cityname ) {
+    console.log("error comes here");
+    return res.status(421).json({ error: "please fill the field properly" }); 
+  }
+
+  try {
+    const hospitalExist = await Hospital.findOne({statename:statename,cityname:cityname,locality:locality,hospitalname:hospitalname});
+    if (hospitalExist) {
+      return res.status(422).json({ error: "already hospital there in this locality" });
+    } 
+    else {
+      const hospital = new Hospital({statename,cityname,locality,hospitalname,hspblood,hspoxygen,hspbed,hspdoctor,hspservices});
+     
+      hospital.save(result=>{
+        res.send("saved to database");
+        console.log("details saved successfully");
+      });
+    }
+  }
+   catch (err) {
+    console.log(err);
+  }
+});
+
+//--------------------binding dropdown------------------------//
+
+router.get('/gethospitallist', async (req, res) => {
+  const hospitallist = await Hospital.distinct("hospitalname");
+  
+  if (hospitallist) {
+    res.send(hospitallist);
+  } else
+    res.send("no state is available ")
 });
 
 module.exports = router;
