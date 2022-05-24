@@ -61,22 +61,22 @@ router.post('/register', async (req, res) => {
 
       await user.save()
       console.log(user.email);
-      let userMail = user.email;
-      // console.log(userMail);
-      const msg = {
+      // let userMail = user.email;
+      // // console.log(userMail);
+      // const msg = {
 
-        to: userMail,
-        from: "medicee.org@gmail.com",
-        subject: "Registered Successfully",
-        text: "<p>Good job</p>",
-        html: "<h1> Welcome to medicee </h1> <a>click here</a>"
-      }
-      sgMail.send(msg).then((response) => {
-        console.log(response[0].statusCode)
-        console.log(response[0].headers)
-      }).catch((error) => {
-        console.log(error)
-      })
+      //   to: userMail,
+      //   from: "medicee.org@gmail.com",
+      //   subject: "Registered Successfully",
+      //   text: "<p>Good job</p>",
+      //   html: "<h1> Welcome to medicee </h1> <a>click here</a>"
+      // }
+      // sgMail.send(msg).then((response) => {
+      //   console.log(response[0].statusCode)
+      //   console.log(response[0].headers)
+      // }).catch((error) => {
+      //   console.log(error)
+      // })
 
 
 
@@ -195,6 +195,15 @@ router.get('/getalluserdetails', async (req, res) => {
   } else
     res.send("user is not available ")
 });
+router.delete('/removedetail/:user', async (req, res) => {
+  const user=req.params.user;
+  const users = await User.deleteOne({email:user});
+  
+  if (users) {
+    res.send("deleted successfully");
+  } else
+    res.send("user is not available ");
+});
 
 // ----------------------------BookAppointMent ---------------------------- //
 
@@ -278,18 +287,40 @@ router.get('/showallappointment', async (req, res) => {
 
 
 // ----------------------------Get Hospital Detail ---------------------------- //
-router.get('/gethspdetails', async (req, res) => {
-  const bloodavail = await Hospital.findOne({ hspblood: 'yes' });
-  console.log(bloodavail);
-  if (bloodavail) {
-    res.status(500).json({ message: "blood is available" });
-  } else
-    res.send("blood is not available ")
+router.get('/gethspdetails/:hospitalname', async (req, res) => {
+  const hospitalname=req.params.hospitalname;
+  const bloodavail = await Hospital.findOne({hospitalname, hspblood: {$gte:1} });
+  const oxygenavail = await Hospital.findOne({hospitalname, hspoxygen: {$gte:1} });
+  const bedavail = await Hospital.findOne({hospitalname, hspbed: {$gte:1} });
+  var num,num1,num2;
+  if (bloodavail)
+    num=500;
+  else
+   num=501;
+  if (oxygenavail)
+   num1=510;
+  else
+    num1=511; 
+  if (bedavail)
+    num2=520;
+  else
+    num2=521;
+  res.send([num,num1,num2]);
 });
 
 router.get('/getallhspdetails', async (req, res) => {
   const hospital = await Hospital.find();
   
+  if (hospital) {
+    res.send(hospital);
+  } else
+    res.send("hospital is not available ")
+});
+
+router.get('/getareahspdetails/:local', async (req, res) => {
+  const locality=req.params.local;
+  const hospital = await Hospital.find({locality:locality});
+  //,{_id:0,hospitalname:1}
   if (hospital) {
     res.send(hospital);
   } else
@@ -317,6 +348,7 @@ router.post('/postdetails', async(req, res) => {
         res.send("saved to database");
         console.log("details saved successfully");
       });
+
     }
   }
    catch (err) {
